@@ -1,7 +1,10 @@
 package com.adminapp.ui.employee_login
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import com.adminapp.prefrences.Preference
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
@@ -9,16 +12,23 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class EmployeeLoginViewModel : ViewModel() {
+@HiltViewModel
+class EmployeeLoginViewModel
+@Inject constructor(
+    private val preference: Preference,
+) : ViewModel() {
     val rootRef = FirebaseFirestore.getInstance()
     val auth = FirebaseAuth.getInstance()
 
     val allUsersRef = rootRef.collection("employees")
     private var storedVerificationId: String? = null
-    private var code: String? = null
+    private val isVerifed = MediatorLiveData<Boolean>()
+    val isVerifedUser: LiveData<Boolean> = isVerifed
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
 
@@ -58,7 +68,8 @@ class EmployeeLoginViewModel : ViewModel() {
         activity: EmployeeLoginActivity
     ) {
         val optionsBuilder = PhoneAuthOptions.newBuilder(auth).setPhoneNumber("+91$phoneNumber")
-            .setTimeout(60L, TimeUnit.SECONDS).setActivity(activity).setCallbacks(callbacks).setForceResendingToken(resendToken)
+            .setTimeout(60L, TimeUnit.SECONDS).setActivity(activity).setCallbacks(callbacks)
+            .setForceResendingToken(resendToken)
         PhoneAuthProvider.verifyPhoneNumber(optionsBuilder.build())
     }
     // [END resend_verification]
@@ -70,6 +81,8 @@ class EmployeeLoginViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = task.result?.user
+                    preference.setUserPhone("+917003527263")
+                    isVerifed.value = true
                     Log.d("TAG", "Login Complete")
                 } else {
                     Log.d("TAG", "Login Failed")

@@ -3,7 +3,7 @@ package com.adminapp.prefrences
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 /**
  * Created by Rahul on 09/04/2018.

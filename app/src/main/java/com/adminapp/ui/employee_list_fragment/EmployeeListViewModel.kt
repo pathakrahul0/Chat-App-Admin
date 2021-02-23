@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import java.util.*
 
+
 class EmployeeListViewModel : ViewModel() {
     private lateinit var firestoreListener: ListenerRegistration
     private val database = FirebaseFirestore.getInstance().collection("employees")

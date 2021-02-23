@@ -5,6 +5,7 @@
     tools:context=".ui.employee_login.EmployeeLoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/l_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp">

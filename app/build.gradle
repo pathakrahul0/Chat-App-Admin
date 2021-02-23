@@ -75,10 +75,13 @@ dependencies {
     implementation "androidx.browser:browser:1.3.0"
 
 
-
     //Android Room
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+
+    //Preferences
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+
 
     //Android WorkManager
     implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
@@ -92,6 +95,8 @@ dependencies {
     //DI Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0-alpha03'
 
     //Testing Tools
     testImplementation 'junit:junit:4.13.2'
