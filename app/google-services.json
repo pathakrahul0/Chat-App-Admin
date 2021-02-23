@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "517092975555",
+    "project_id": "admin-chat-app",
+    "storage_bucket": "admin-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:517092975555:android:c886b68375a2c8c068d376",
+        "android_client_info": {
+          "package_name": "com.adminapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "517092975555-hukdpliihedilkh47nno8evnoo16rdms.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adminapp",
+            "certificate_hash": "90ba08852d9b820f001ab43da9df05e1202c9bc6"
+          }
+        },
+        {
+          "client_id": "517092975555-qdurcg73bspdor2jehgebev02h02vhes.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA33Kb21zU0Uj_SS67DkrYSoPdCkoQ0Fbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "517092975555-qdurcg73bspdor2jehgebev02h02vhes.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
