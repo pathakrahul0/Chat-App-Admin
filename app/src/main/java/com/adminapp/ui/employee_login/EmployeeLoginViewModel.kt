@@ -22,6 +22,8 @@ class EmployeeLoginViewModel
 @Inject constructor(
     private val preference: Preference,
 ) : ViewModel() {
+
+    private var employeeId: String? = null
     val rootRef = FirebaseFirestore.getInstance()
     val auth = FirebaseAuth.getInstance()
 
@@ -42,6 +44,8 @@ class EmployeeLoginViewModel
             if (task.isSuccessful) {
                 for (document in task.result!!) {
                     if (document.exists()) {
+                        employeeId = document.data["id"].toString()
+
                         PhoneAuthProvider.verifyPhoneNumber(option)
                         Log.d("TAG", "username already exists")
                     } else {
@@ -81,7 +85,7 @@ class EmployeeLoginViewModel
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = task.result?.user
-                    preference.setUserPhone("+917003527263")
+                    preference.setUserId(employeeId)
                     isVerifed.value = true
                     Log.d("TAG", "Login Complete")
                 } else {
@@ -89,6 +93,8 @@ class EmployeeLoginViewModel
                 }
             }
     }
+
+
 
     var callbacks = object :
         PhoneAuthProvider.OnVerificationStateChangedCallbacks() {

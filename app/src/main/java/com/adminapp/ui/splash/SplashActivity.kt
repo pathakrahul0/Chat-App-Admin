@@ -1,18 +1,27 @@
 package com.adminapp.ui.splash
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import com.adminapp.R
-import com.adminapp.ui.main.MainActivity
+import com.adminapp.prefrences.Preference
+import com.adminapp.ui.employee_list_activity.EmployeeListActivity
 import com.adminapp.ui.role.RoleActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var preference: Preference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +36,27 @@ class SplashActivity : AppCompatActivity() {
             )
         }
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("SplashActivity", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            preference.setUserEmail(token)
+            // Log and toast
+            /* val msg = getString(R.string.msg_token_fmt, token)
+             Log.d("SplashActivity", msg)
+             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()*/
+        })
+
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this@SplashActivity, RoleActivity::class.java))
+            if (preference.getUserId().isNullOrEmpty())
+                startActivity(Intent(this@SplashActivity, RoleActivity::class.java))
+            else
+                startActivity(Intent(this@SplashActivity, EmployeeListActivity::class.java))
+
             finish()
         }, 2000)
 

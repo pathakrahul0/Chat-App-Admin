@@ -36,8 +36,11 @@ class EmployeeListViewModel : ViewModel() {
                                 id = employee.document.get("id").toString(),
                                 name = employee.document.get("name").toString(),
                                 phone = employee.document.get("phone").toString(),
-                                createdAt = employee.document.get("createdAt").toString().toLong(),
-                                updatedAt = employee.document.get("updatedAt").toString().toLong(),
+                                timeStamp = employee.document.getLong("timeStamp")!!,
+                                chatRoomReceiver = ArrayList(),
+                                chatRoom = ArrayList(),
+                                createdAt = employee.document.getLong("createdAt")!!,
+                                updatedAt = employee.document.getLong("updatedAt")!!
                             )
                         )
                     } else if (employee.type == DocumentChange.Type.REMOVED) {

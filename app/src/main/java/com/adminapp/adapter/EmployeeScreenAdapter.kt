@@ -11,11 +11,11 @@ import com.adminapp.interfaces.OnItemClicks
 import com.adminapp.model.Employee
 import com.adminapp.utils.Constants
 
-class EmployeeAdapter(
+class EmployeeScreenAdapter(
     private val employeeList: ArrayList<Employee>,
     private val activity: Activity,
     private val onItemClicks: OnItemClicks,
-) : RecyclerView.Adapter<EmployeeAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<EmployeeScreenAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,6 +45,8 @@ class EmployeeAdapter(
         return employeeList.size
     }
 
+    fun formatDate() {
+    }
 
     inner class ViewHolder(var rowBinding: AdapterEmployeeBinding) :
         RecyclerView.ViewHolder(rowBinding.root)

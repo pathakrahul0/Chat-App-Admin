@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Admin App</string>
     <string name="title_activity_splash">Splash Activity</string>
-    <string name="title_employee_list">Employee List</string>
+    <string name="title_employee_list">Employees</string>
     <string name="title_employee_details">Employee Details</string>
     <string name="full_name">Name</string>
     <string name="phone">Phone</string>
@@ -12,4 +12,13 @@
     <string name="resend_otp">Resend OTP</string>
     <string name="admin">Admin</string>
     <string name="employee">Employee</string>
+    <string name="message">In order to change the visibility programmatically, you should use View.VISIBLE , View.INVISIBLE or View.GONE . Setting the visibility using myView.visibility</string>
+    <string name="notifications_admin_channel_description">notifications_admin_channel_description</string>
+    <string name="notifications_admin_channel_name">notifications_admin_channel_name</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="chat_screen">Chat</string>
+    <string name="time_stamp">9:06 pm</string>
+    <string name="logout">Logout</string>
+    <string name="type_a_message">Type a message...</string>
+
 </resources>

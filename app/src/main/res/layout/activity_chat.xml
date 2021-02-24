@@ -1,9 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.chat.ChatActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.chat.ChatActivity">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="55dp"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvChat"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+
+        <EditText
+            android:id="@+id/etMsg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/text_msg_bg"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:hint="@string/type_a_message"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxHeight="100dp"
+            android:minHeight="40dp"
+            android:padding="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/sendText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sendText"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            app:cornerRadius="50dp"
+            app:icon="@drawable/ic_send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_file" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_file"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:padding="8dp"
+            android:layout_marginEnd="8dp"
+            app:cornerRadius="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:icon="@drawable/ic_attach_file" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -3,7 +3,7 @@ buildscript {
     ext {
         kotlin_version = "1.4.30"
         materialVersion = '1.0.0'
-        recyclerViewVersion = '1.1.0-alpha05'
+        recyclerViewVersion = '1.2.0-beta01'
         glideVersion = '4.9.0'
         roomVersion = '2.2.6'
         workVersion = '2.5.0'

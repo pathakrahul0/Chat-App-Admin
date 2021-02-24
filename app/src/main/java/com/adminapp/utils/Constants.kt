@@ -9,10 +9,11 @@ class Constants {
 
         @SuppressLint("SimpleDateFormat")
         fun getDateTime(
-            timestamp: Long
+            timestamp: Long,
+            format: String,
         ): String? {
             return try {
-                val sdf = SimpleDateFormat("dd/MM/yyyy")
+                val sdf = SimpleDateFormat(format)
                 val netDate = Date(timestamp)
                 sdf.format(netDate)
             } catch (e: Exception) {
