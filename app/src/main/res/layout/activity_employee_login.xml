@@ -5,102 +5,138 @@
     tools:context=".ui.employee_login.EmployeeLoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/l_login"
+        android:id="@+id/l_employee_login"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_otp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_phone_no">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_otp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
-                android:fontFamily="sans-serif-medium"
-                android:hint="@string/enter_otp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:inputType="textCapWords"
-                android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:layout_height="match_parent">
 
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_phone_no"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_phone"
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="sans-serif-black"
+                android:padding="8dp"
+                android:text="@string/employee_login"
+                android:textColor="@color/green_500"
+                android:textSize="20sp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_phone_no"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-medium"
+                    android:hint="@string/phone"
+                    android:inputType="numberSigned"
+                    android:maxLength="10"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_otp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_otp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:fontFamily="sans-serif-medium"
+                    android:hint="@string/enter_otp"
+                    android:inputType="textCapWords"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_send_otp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-medium"
-                android:hint="@string/phone"
-                android:inputType="numberSigned"
-                android:maxLength="10"
-                android:maxLines="1"
+                android:text="@string/send_otp"
+                android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_verify_otp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/verify_otp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/tv_resend_otp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-black"
+                android:padding="8dp"
+                android:text="@string/resend_otp"
+                android:textColor="@color/light_blue_600"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_send_otp"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/send_otp"
-            android:textAllCaps="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_otp" />
+            <TextView
+                android:id="@+id/tv_admin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-black"
+                android:padding="8dp"
+                android:text="@string/are_you_admin_click_here"
+                android:textColor="@color/light_blue_600"
+                android:textSize="14sp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_verify_otp"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/verify_otp"
-            android:textAllCaps="false"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_send_otp" />
 
-        <TextView
-            android:id="@+id/tv_resend_otp"
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/loader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif-black"
-            android:text="@string/resend_otp"
             android:visibility="gone"
-            tools:visibility="visible"
-            android:textColor="@color/light_blue_600"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_verify_otp" />
-
-
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

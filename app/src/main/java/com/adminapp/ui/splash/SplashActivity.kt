@@ -11,7 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.adminapp.R
 import com.adminapp.prefrences.Preference
 import com.adminapp.ui.employee_list_activity.EmployeeListActivity
-import com.adminapp.ui.role.RoleActivity
+import com.adminapp.ui.employee_login.EmployeeLoginActivity
+import com.adminapp.ui.main.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,10 +53,12 @@ class SplashActivity : AppCompatActivity() {
         })
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (preference.getUserId().isNullOrEmpty())
-                startActivity(Intent(this@SplashActivity, RoleActivity::class.java))
-            else
+            if (!preference.getUserId().isNullOrEmpty()) {
                 startActivity(Intent(this@SplashActivity, EmployeeListActivity::class.java))
+            } else if (preference.isAdmin())
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            else
+                startActivity(Intent(this@SplashActivity, EmployeeLoginActivity::class.java))
 
             finish()
         }, 2000)

@@ -63,11 +63,12 @@ data class Employee(
     )
 
     override fun describeContents(): Int {
-        TODO("Not yet implemented")
+        return 0
     }
 
+
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        TODO("Not yet implemented")
+
     }
 
     companion object CREATOR : Parcelable.Creator<Employee> {

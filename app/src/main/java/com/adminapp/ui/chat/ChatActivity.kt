@@ -85,22 +85,6 @@ class ChatActivity : AppCompatActivity() {
 
     }
 
- /*   override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.chat_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.logout -> {
-                FirebaseAuth.getInstance().signOut()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-
-    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

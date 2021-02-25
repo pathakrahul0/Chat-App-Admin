@@ -10,7 +10,7 @@
     </style>
 
     <style name="ThemeSplashScreen" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:background">@color/black_overlay</item>
+        <item name="android:background">@color/white</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 

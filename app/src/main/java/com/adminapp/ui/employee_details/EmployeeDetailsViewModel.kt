@@ -1,44 +1,66 @@
 package com.adminapp.ui.employee_details
 
+import android.util.Log
+import android.widget.ProgressBar
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import com.adminapp.model.ChatRoom
 import com.adminapp.model.Employee
 import com.google.firebase.firestore.FirebaseFirestore
 
 class EmployeeDetailsViewModel : ViewModel() {
-    private val database = FirebaseFirestore.getInstance()
-
+    private val database = FirebaseFirestore.getInstance().collection("employees")
+    private val isEmployeeExist = MediatorLiveData<Boolean>()
+    val isEmployeeExists: LiveData<Boolean> = isEmployeeExist
+    private val isLoad = MediatorLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> = isLoad
 
     fun addEmployee(name: String, phone: String, createdAt: Long, updatedAt: Long) {
-        val node = database
-            .collection("employees")
-            .document()
-        val user = Employee(
-            id = node.id,
-            name = name,
-            phone = phone,
-            chatRoom = ArrayList(),
-            chatRoomReceiver = ArrayList(),
-            createdAt = createdAt,
-            updatedAt = updatedAt,
-            timeStamp = 0L
-        )
+        isLoad.value = true
+        val node = database.document()
+        database.whereEqualTo("phone", phone).get().addOnCompleteListener { task ->
+            isLoad.value = false
 
-        node.set(user)
-            .addOnSuccessListener {
+            if (task.isSuccessful) {
+                if (task.result?.size()!! > 0) {
+                    for (document in task.result!!) {
+                        if (document.exists()) {
+                            Log.d("TAG", "username already exists")
+                            isEmployeeExist.value = false
+                        }
+                    }
+                } else {
+                    val user = Employee(
+                        id = node.id,
+                        name = name,
+                        phone = phone,
+                        chatRoom = ArrayList(),
+                        chatRoomReceiver = ArrayList(),
+                        createdAt = createdAt,
+                        updatedAt = updatedAt,
+                        timeStamp = 0L
+                    )
 
+                    node.set(user)
+                        .addOnSuccessListener {
+                            isLoad.value = false
+                        }.addOnFailureListener {
+                            isLoad.value = false
+                        }
+                    Log.d("TAG", "username does not exists")
+                }
+            } else {
+                Log.d("TAG", "Error getting documents: ", task.exception)
             }
-            .addOnFailureListener {
-                // Write failed
-                // ...
-            }
+        }
+
+
     }
 
     fun updateEmployee(id: String, name: String, phone: String, updatedAt: Long) {
-        val node = database
-            .collection("employees")
-            .document(id)
+        isLoad.value = true
 
+        val node = database.document(id)
         node.update(
             mapOf(
                 "name" to name,
@@ -46,10 +68,11 @@ class EmployeeDetailsViewModel : ViewModel() {
                 "updatedAt" to updatedAt
             )
         ).addOnSuccessListener {
+            isLoad.value = false
 
         }.addOnFailureListener {
-            // Write failed
-            // ...
+            isLoad.value = false
+
         }
 
     }

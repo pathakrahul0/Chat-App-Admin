@@ -11,6 +11,7 @@ import com.adminapp.prefrences.Preference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
@@ -23,6 +24,7 @@ class EmployeeListActivityViewModel
 ) : ViewModel() {
     private lateinit var fireStoreListener: ListenerRegistration
     private val database = FirebaseFirestore.getInstance().collection("employees")
+        .orderBy("name", Query.Direction.ASCENDING)
     private var employeeList = MutableLiveData<ArrayList<Employee>>()
     var employeesData: LiveData<ArrayList<Employee>> = employeeList
     private var employeesLists = ArrayList<Employee>()

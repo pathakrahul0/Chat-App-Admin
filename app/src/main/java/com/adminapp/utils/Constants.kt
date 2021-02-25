@@ -1,6 +1,8 @@
 package com.adminapp.utils
 
 import android.annotation.SuppressLint
+import android.text.TextUtils
+import android.util.Patterns
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,6 +21,10 @@ class Constants {
             } catch (e: Exception) {
                 e.toString()
             }
+        }
+
+        fun isValidMailId(target: CharSequence?): Boolean {
+            return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target!!).matches()
         }
     }
 

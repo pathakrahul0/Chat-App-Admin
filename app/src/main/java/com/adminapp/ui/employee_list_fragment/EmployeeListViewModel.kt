@@ -9,12 +9,14 @@ import com.adminapp.model.Employee
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import java.util.*
 
 
 class EmployeeListViewModel : ViewModel() {
     private lateinit var firestoreListener: ListenerRegistration
     private val database = FirebaseFirestore.getInstance().collection("employees")
+        .orderBy("name", Query.Direction.ASCENDING)
     private var employeeList = MutableLiveData<ArrayList<Employee>>()
     var employeesData: LiveData<ArrayList<Employee>> = employeeList
     private var employeesLists = ArrayList<Employee>()

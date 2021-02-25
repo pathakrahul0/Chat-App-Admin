@@ -1,7 +1,6 @@
 package com.adminapp.prefrences
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.preference.PreferenceManager
 
@@ -10,6 +9,14 @@ import androidx.preference.PreferenceManager
  */
 class Preference(var context: Context) {
 
+
+    fun setIsAdmin(isAdmin: Boolean?) {
+        setBoolean("isAdmin", isAdmin!!)
+    }
+
+    fun isAdmin(): Boolean {
+        return getBoolean("isAdmin")
+    }
 
     fun setUserId(UserId: String?) {
         setString("Id", UserId!!)
@@ -56,7 +63,7 @@ class Preference(var context: Context) {
     }
 
     fun getUserProfilePhoto(): String? {
-        return getString("UserProfilePhoto", null)
+        return getString("UserProfilePhoto", "")
     }
 
 
