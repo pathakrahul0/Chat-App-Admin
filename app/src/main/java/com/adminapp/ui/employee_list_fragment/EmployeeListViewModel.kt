@@ -40,9 +40,9 @@ class EmployeeListViewModel : ViewModel() {
                                 phone = employee.document.get("phone").toString(),
                                 timeStamp = employee.document.getLong("timeStamp")!!,
                                 chatRoomReceiver = ArrayList(),
-                                chatRoom = ArrayList(),
                                 createdAt = employee.document.getLong("createdAt")!!,
-                                updatedAt = employee.document.getLong("updatedAt")!!
+                                updatedAt = employee.document.getLong("updatedAt")!!,
+                                isSelected = false
                             )
                         )
                     } else if (employee.type == DocumentChange.Type.REMOVED) {

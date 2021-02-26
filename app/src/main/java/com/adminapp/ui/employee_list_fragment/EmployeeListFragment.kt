@@ -38,7 +38,9 @@ class EmployeeListFragment : Fragment() {
         employeeAdapter = EmployeeAdapter(employeeList, requireActivity(), object : OnItemClicks {
             override fun onEmployeeClick(position: Int) {
                 val bundle = Bundle()
-                bundle.putParcelable("employeeData", employeeList[position])
+                bundle.putString("name", employeeList[position].name)
+                bundle.putString("id", employeeList[position].id)
+                bundle.putString("phone", employeeList[position].phone)
                 findNavController().navigate(R.id.navigation_employee_details, bundle)
             }
 

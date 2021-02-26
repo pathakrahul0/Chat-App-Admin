@@ -1,13 +1,10 @@
 package com.adminapp.ui.chat
 
 import android.Manifest
-import android.R
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -16,7 +13,6 @@ import com.adminapp.adapter.ChatAdapter
 import com.adminapp.databinding.ActivityChatBinding
 import com.adminapp.model.SendMessage
 import com.adminapp.prefrences.Preference
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,8 +61,9 @@ class ChatActivity : AppCompatActivity() {
         }
 
         binding.sendText.setOnClickListener {
-            if (binding.etMsg.text.toString().isNotEmpty())
+            if (binding.etMsg.text.toString().isNotEmpty()) {
                 viewModel.sendMsg(binding.etMsg.text.toString(), "text")
+            }
             else Toast.makeText(this, "Can't send empty message", Toast.LENGTH_LONG).show()
         }
 

@@ -36,9 +36,9 @@ class SearchViewModel
                                         phone = document.get("phone").toString(),
                                         timeStamp = document.getLong("timeStamp")!!,
                                         chatRoomReceiver = ArrayList(),
-                                        chatRoom = ArrayList(),
                                         createdAt = document.getLong("createdAt")!!,
-                                        updatedAt = document.getLong("updatedAt")!!
+                                        updatedAt = document.getLong("updatedAt")!!,
+                                        isSelected = false
                                     )
                                 )
                             }

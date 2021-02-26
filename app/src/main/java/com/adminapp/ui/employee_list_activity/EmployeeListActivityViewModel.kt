@@ -28,9 +28,25 @@ class EmployeeListActivityViewModel
     private var employeeList = MutableLiveData<ArrayList<Employee>>()
     var employeesData: LiveData<ArrayList<Employee>> = employeeList
     private var employeesLists = ArrayList<Employee>()
+    private var chatRoomSenders: ArrayList<String>? = ArrayList()
 
 
     fun getEmployees() {
+        FirebaseFirestore
+            .getInstance()
+            .collection("employees")
+            .document(preference.getUserId()!!)
+            .get()
+            .addOnSuccessListener {
+                if (it.data?.get("chatRoomReceiver") != null)
+                    chatRoomSenders = it.data?.get("chatRoomReceiver") as ArrayList<String>
+                getEmployeesList()
+            }
+
+    }
+
+    private fun getEmployeesList() {
+
         fireStoreListener = database.addSnapshotListener { snapshot, it1 ->
             if (it1 != null) {
                 Log.w(ContentValues.TAG, "Listen failed.", it1)
@@ -40,54 +56,42 @@ class EmployeeListActivityViewModel
                 employeesLists.clear()
                 for (employee in snapshot.documentChanges) {
                     Log.d("Users List ", "" + employee.document.get("name"))
+                    val receiverList =
+                        employee.document.get("chatRoomReceiver") as ArrayList<String>
+
                     if (employee.type == DocumentChange.Type.ADDED) {
                         if (!preference.getUserId()
                                 .equals(employee.document.get("id").toString())
                         ) {
-                            employeesLists.add(
+                            if (employee.document.get("phone")!! == "Group") {
+                                for (receiver in receiverList) {
+                                    if (chatRoomSenders?.contains(receiver)!!)
+                                        employeesLists.add(
+                                            Employee(
+                                                id = employee.document.get("id").toString(),
+                                                name = employee.document.get("name").toString(),
+                                                phone = employee.document.get("phone").toString(),
+                                                timeStamp = employee.document.getLong("timeStamp")!!,
+                                                chatRoomReceiver = ArrayList(),
+                                                createdAt = employee.document.getLong("createdAt")!!,
+                                                updatedAt = employee.document.getLong("updatedAt")!!,
+                                                isSelected = false
+                                            )
+                                        )
+                                }
+                            } else employeesLists.add(
                                 Employee(
                                     id = employee.document.get("id").toString(),
                                     name = employee.document.get("name").toString(),
                                     phone = employee.document.get("phone").toString(),
                                     timeStamp = employee.document.getLong("timeStamp")!!,
                                     chatRoomReceiver = ArrayList(),
-                                    chatRoom = ArrayList(),
                                     createdAt = employee.document.getLong("createdAt")!!,
-                                    updatedAt = employee.document.getLong("updatedAt")!!
+                                    updatedAt = employee.document.getLong("updatedAt")!!,
+                                    isSelected = false
                                 )
                             )
                         }
-                    } else if (employee.type == DocumentChange.Type.REMOVED) {
-                        val ids = employee.document.get("id").toString()
-                        for (id in 0 until employeesLists.size) {
-                            if (employeesLists[id].id == ids) {
-                                employeesLists.removeAt(id)
-                                break
-                            }
-                        }
-
-                    } else if (employee.type == DocumentChange.Type.MODIFIED) {
-
-                        val ids = employee.document.get("id").toString()
-                        for (id in 0 until employeesLists.size) {
-                            if (employeesLists[id].id == ids) {
-                                employeesLists.removeAt(id)
-                                break
-                            }
-                        }
-                        if (!preference.getUserId().equals(employee.document.get("id").toString()))
-                            employeesLists.add(
-                                Employee(
-                                    id = employee.document.get("id").toString(),
-                                    name = employee.document.get("name").toString(),
-                                    phone = employee.document.get("phone").toString(),
-                                    timeStamp = employee.document.getLong("timeStamp")!!,
-                                    chatRoomReceiver = ArrayList(),
-                                    chatRoom = ArrayList(),
-                                    createdAt = employee.document.getLong("createdAt")!!,
-                                    updatedAt = employee.document.getLong("updatedAt")!!
-                                )
-                            )
                     }
                 }
                 employeeList.value = employeesLists
@@ -95,6 +99,7 @@ class EmployeeListActivityViewModel
                 Log.d(ContentValues.TAG, "Current data: null")
 
         }
+
     }
 
 

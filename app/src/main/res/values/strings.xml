@@ -27,8 +27,10 @@
     <string name="search">Search</string>
     <string name="search_by_number">Search by number</string>
     <string name="employee_login">Employee Login</string>
-    <string name="admin_login" >Admin Login</string>
+    <string name="admin_login">Admin Login</string>
     <string name="admin_admin_com">admin@admin.com</string>
     <string name="_12345678">12345678</string>
+    <string name="create_group">Create Group</string>
+    <string name="new_group">New Group</string>
 
 </resources>

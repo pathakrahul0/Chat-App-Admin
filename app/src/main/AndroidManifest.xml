@@ -18,11 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AdminApp"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.search.SearchActivity"
+        <activity
+            android:name=".ui.group.GroupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AdminApp.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            />
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".ui.search.SearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AdminApp.NoActionBar"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.admin_login.AdminLoginActivity"
             android:label="@string/login"

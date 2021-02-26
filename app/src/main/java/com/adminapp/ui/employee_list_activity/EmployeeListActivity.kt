@@ -2,7 +2,6 @@ package com.adminapp.ui.employee_list_activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import com.adminapp.model.Employee
 import com.adminapp.prefrences.Preference
 import com.adminapp.ui.chat.ChatActivity
 import com.adminapp.ui.employee_login.EmployeeLoginActivity
+import com.adminapp.ui.group.GroupActivity
 import com.adminapp.ui.search.SearchActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +39,7 @@ class EmployeeListActivity : AppCompatActivity() {
         binding = ActivityEmployeeListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel.getEmployees()
+
 
 
         employeeAdapter = EmployeeScreenAdapter(employeeList, this, object : OnItemClicks {
@@ -70,6 +71,10 @@ class EmployeeListActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.new_group -> {
+                startActivity(Intent(this, GroupActivity::class.java))
+                true
+            }
             R.id.search -> {
                 startActivity(Intent(this, SearchActivity::class.java))
                 true

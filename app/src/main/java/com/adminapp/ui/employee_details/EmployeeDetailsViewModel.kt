@@ -15,12 +15,13 @@ class EmployeeDetailsViewModel : ViewModel() {
     private val isLoad = MediatorLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = isLoad
 
+
+
     fun addEmployee(name: String, phone: String, createdAt: Long, updatedAt: Long) {
         isLoad.value = true
         val node = database.document()
         database.whereEqualTo("phone", phone).get().addOnCompleteListener { task ->
             isLoad.value = false
-
             if (task.isSuccessful) {
                 if (task.result?.size()!! > 0) {
                     for (document in task.result!!) {
@@ -34,11 +35,11 @@ class EmployeeDetailsViewModel : ViewModel() {
                         id = node.id,
                         name = name,
                         phone = phone,
-                        chatRoom = ArrayList(),
                         chatRoomReceiver = ArrayList(),
                         createdAt = createdAt,
                         updatedAt = updatedAt,
-                        timeStamp = 0L
+                        timeStamp = 0L,
+                        false
                     )
 
                     node.set(user)

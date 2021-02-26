@@ -19,7 +19,9 @@ class EmployeeDetailsFragment : Fragment() {
 
     private lateinit var detailsViewModel: EmployeeDetailsViewModel
     private lateinit var binding: EmployeeDetailsFragmentBinding
-    var employeeData: Employee? = null
+    var employeeName: String? = null
+    var employeeId: String? = null
+    var employeePhone: String? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,18 +35,21 @@ class EmployeeDetailsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         detailsViewModel = ViewModelProvider(this).get(EmployeeDetailsViewModel::class.java)
 
-        employeeData = arguments?.getParcelable("employeeData")
-        if (employeeData != null) {
-            binding.etFullName.setText(employeeData?.name)
-            binding.etPhone.setText(employeeData?.phone)
+        employeeId = arguments?.getString("id")
+        employeeName = arguments?.getString("name")
+        employeePhone = arguments?.getString("phone")
+
+        if (employeeName != null&&employeePhone!=null) {
+            binding.etFullName.setText(employeeName)
+            binding.etPhone.setText(employeePhone)
             binding.btnAddEmployee.text = "Update Employee"
         }
 
         binding.btnAddEmployee.setOnClickListener {
             if (validateEmployee()) {
-                if (employeeData != null)
+                if (employeeName != null&&employeePhone!=null)
                     detailsViewModel.updateEmployee(
-                        id = employeeData?.id!!,
+                        id = employeeId!!,
                         name = "${binding.etFullName.text}",
                         phone = "${binding.etPhone.text}",
                         updatedAt = Date().time
