@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.adminapp.R
 import com.adminapp.adapter.EmployeeScreenAdapter
@@ -13,6 +15,7 @@ import com.adminapp.interfaces.OnItemClicks
 import com.adminapp.model.Employee
 import com.adminapp.prefrences.Preference
 import com.adminapp.ui.chat.ChatActivity
+import com.adminapp.ui.employee_details_activity.EmployeeDetailsActivity
 import com.adminapp.ui.employee_login.EmployeeLoginActivity
 import com.adminapp.ui.group.GroupActivity
 import com.adminapp.ui.search.SearchActivity
@@ -23,7 +26,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class EmployeeListActivity : AppCompatActivity() {
 
-    val TAG = "EmployeeListActivity"
+    val tag = "EmployeeListActivity"
 
     @Inject
     lateinit var preference: Preference
@@ -38,9 +41,9 @@ class EmployeeListActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(EmployeeListActivityViewModel::class.java)
         binding = ActivityEmployeeListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         viewModel.getEmployees()
-
-
 
         employeeAdapter = EmployeeScreenAdapter(employeeList, this, object : OnItemClicks {
             override fun onEmployeeClick(position: Int) {
@@ -48,19 +51,27 @@ class EmployeeListActivity : AppCompatActivity() {
                     Intent(
                         this@EmployeeListActivity,
                         ChatActivity::class.java
-                    )
-                        .putExtra("receiverId", employeeList[position].id)
+                    ).putExtra("receiverId", employeeList[position].id)
                 )
             }
         })
+
         binding.rvEmployee.adapter = employeeAdapter
 
         viewModel.employeesData.observe({ lifecycle }) {
-            employeeList.clear()
-            employeeList.addAll(it)
-            employeeAdapter?.notifyDataSetChanged()
+            if (it.size > 0) {
+                employeeList.clear()
+                employeeList.addAll(it)
+                employeeAdapter?.notifyDataSetChanged()
+            } else {
+                binding.tvNoDataFound.visibility = View.VISIBLE
+            }
         }
 
+        viewModel.isLoading.observe({ lifecycle }) {
+            if (it) binding.loader.visibility = View.VISIBLE
+            else binding.loader.visibility = View.GONE
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,6 +84,10 @@ class EmployeeListActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.new_group -> {
                 startActivity(Intent(this, GroupActivity::class.java))
+                true
+            }
+            R.id.profile -> {
+                startActivity(Intent(this, EmployeeDetailsActivity::class.java))
                 true
             }
             R.id.search -> {

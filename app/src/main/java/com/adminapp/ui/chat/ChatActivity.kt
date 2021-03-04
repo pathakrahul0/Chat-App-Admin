@@ -5,8 +5,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.adminapp.adapter.ChatAdapter
@@ -40,32 +44,57 @@ class ChatActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(ChatViewModel::class.java)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         receiverId = intent.getStringExtra("receiverId")
 
 
         chatAdapter = ChatAdapter(chatList, this, preference)
         binding.rvChat.adapter = chatAdapter
-        binding.rvChat.smoothScrollToPosition(chatList.size)
+        binding.rvChat.layoutManager?.scrollToPosition(chatList.size)
         binding.rvChat.scrollToPosition(chatList.size)
+        binding.rvChat.smoothScrollToPosition(chatList.size)
 
 
         viewModel.startChart(receiverId!!)
         viewModel.chatList.observe({ lifecycle }) {
             chatList.clear()
             chatList.addAll(it)
-            binding.rvChat.smoothScrollToPosition(chatList.size)
-            binding.rvChat.scrollToPosition(chatList.size)
             chatAdapter?.notifyDataSetChanged()
+
+            binding.rvChat.layoutManager?.scrollToPosition(chatList.size)
+            binding.rvChat.scrollToPosition(chatList.size)
+            binding.rvChat.smoothScrollToPosition(chatList.size)
 
         }
 
         binding.sendText.setOnClickListener {
             if (binding.etMsg.text.toString().isNotEmpty()) {
                 viewModel.sendMsg(binding.etMsg.text.toString(), "text")
-            }
-            else Toast.makeText(this, "Can't send empty message", Toast.LENGTH_LONG).show()
+            } else Toast.makeText(this, "Can't send empty message", Toast.LENGTH_LONG).show()
         }
+        viewModel.textChatValueChange.observe({lifecycle}){
+            binding.etMsg.setText(it)
+        }
+
+        binding.etMsg.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (s?.length!! > 0) {
+                    binding.sendText.visibility = View.VISIBLE
+                    binding.sendFile.visibility = View.GONE
+                } else {
+                    binding.sendText.visibility = View.GONE
+                    binding.sendFile.visibility = View.VISIBLE
+
+                }
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+
+        })
 
 
         binding.sendFile.setOnClickListener {
@@ -105,5 +134,6 @@ class ChatActivity : AppCompatActivity() {
         }
         return true
     }
+
 
 }

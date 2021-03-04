@@ -28,10 +28,10 @@ class ChatViewModel
     private var chatDataList = ArrayList<SendMessage>()
     private var senderId = preference.getUserId()
     private val TAG = "ChatViewModel"
-    var textChatValue = MutableLiveData<String>()
+    private var textChatValue = MutableLiveData<String>()
+    var textChatValueChange: LiveData<String> = textChatValue
     var chatRoomId: String? = null
     var receiverId: String? = null
-    lateinit var fireStoreListener: ListenerRegistration
 
 
     fun sendMsg(textMsg: String, contentType: String) {
@@ -41,13 +41,18 @@ class ChatViewModel
             senderId = senderId,
             contentType = contentType,
             timeStamp = Date().time,
-            status = ""
+            status = false
         )
+        val database = fireBaseFireStore
+            .collection(chatRoomId!!)
+        val node = database.document()
 
-        fireBaseFireStore.collection(chatRoomId!!).add(sendMsg)
+        node.set(sendMsg)
             .addOnCompleteListener {
                 Log.d(TAG, "Send")
-
+                updateChat(node.id)
+                updateReviverTime()
+                updateSenderTime()
             }
         textChatValue.value = ""
     }
@@ -58,9 +63,12 @@ class ChatViewModel
         fireBaseFireStore
             .collection("employees")
             .document(receiverId!!)
-            .update("chatRoomReceiver", chatRoomReceivers)
+            .update(
+                mapOf(
+                    "chatRoomReceiver" to chatRoomSenders
+                )
+            )
             .addOnSuccessListener {
-
             }.addOnFailureListener {
 
             }
@@ -72,7 +80,11 @@ class ChatViewModel
         fireBaseFireStore
             .collection("employees")
             .document(senderId!!)
-            .update("chatRoomReceiver", chatRoomSenders)
+            .update(
+                mapOf(
+                    "chatRoomReceiver" to chatRoomSenders
+                )
+            )
             .addOnSuccessListener { _ ->
                 receiverReceiverId()
             }
@@ -82,6 +94,7 @@ class ChatViewModel
     }
 
     private fun getReceivers() {
+        chatRoomReceivers?.clear()
         fireBaseFireStore
             .collection("employees")
             .document(receiverId!!)
@@ -94,6 +107,7 @@ class ChatViewModel
     }
 
     private fun getSenders() {
+        chatRoomSenders?.clear()
         fireBaseFireStore
             .collection("employees")
             .document(senderId!!)
@@ -122,26 +136,25 @@ class ChatViewModel
 
     fun startChart(receiverId: String) {
         this.receiverId = receiverId
-        chatRoomReceivers?.clear()
-        chatRoomSenders?.clear()
         getReceivers()
     }
 
     private fun checkMessageCollections() {
-        val docRef = fireBaseFireStore.collection(chatRoomId!!)
-        val query = docRef.orderBy("timeStamp", Query.Direction.ASCENDING)
-        fireStoreListener = query.addSnapshotListener { snapshot, it1 ->
-            if (it1 != null) {
-                Log.w(TAG, "Listen failed.", it1)
-                return@addSnapshotListener
+        fireBaseFireStore
+            .collection(chatRoomId!!)
+            .orderBy("timeStamp", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, it1 ->
+                if (it1 != null) {
+                    Log.w(TAG, "Listen failed.", it1)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null && !snapshot.isEmpty) {
+                    val messageData = snapshot.toObjects(SendMessage::class.java)
+                    chatDataList.clear()
+                    chatDataList.addAll(messageData)
+                    _chatList.value = chatDataList
+                }
             }
-            if (snapshot != null && !snapshot.isEmpty) {
-                val messageData = snapshot.toObjects(SendMessage::class.java)
-                chatDataList.clear()
-                chatDataList.addAll(messageData)
-                _chatList.value = chatDataList
-            }
-        }
     }
 
     fun uploadFirebase(uri: Uri, activity: ChatActivity) {
@@ -174,6 +187,57 @@ class ChatViewModel
     private fun getFileExtension(uri: Uri, activity: ChatActivity): String? {
         return MimeTypeMap.getSingleton()
             .getExtensionFromMimeType(activity.contentResolver.getType(uri))
+    }
+
+    private fun updateChat(id: String) {
+
+        val node = FirebaseFirestore
+            .getInstance().collection(chatRoomId!!)
+            .document(id)
+        node.update(
+            mapOf(
+                "status" to true,
+                "timeStamp" to Date().time,
+            )
+        ).addOnSuccessListener {
+
+        }.addOnFailureListener {
+        }
+
+    }
+    private fun updateReviverTime() {
+       FirebaseFirestore
+            .getInstance().collection("employees")
+            .document(receiverId!!).update(
+            mapOf(
+                "timeStamp" to Date().time,
+            )
+        ).addOnSuccessListener {
+               Log.d("Update ","Success")
+
+           }
+           .addOnFailureListener {
+               Log.d("Update ","Failure")
+
+        }
+
+    }
+    private fun updateSenderTime() {
+       FirebaseFirestore
+            .getInstance().collection("employees")
+            .document(senderId!!).update(
+            mapOf(
+                "timeStamp" to Date().time,
+            )
+        ).addOnSuccessListener {
+               Log.d("Update ","Success")
+
+           }
+           .addOnFailureListener {
+               Log.d("Update ","Failure")
+
+           }
+
     }
 
 

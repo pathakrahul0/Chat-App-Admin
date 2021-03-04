@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.adminapp.databinding.ActivityAdminLoginBinding
 import com.adminapp.prefrences.Preference
@@ -27,6 +28,7 @@ class AdminLoginActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(AdminLoginViewModel::class.java)
         binding = ActivityAdminLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding.btnLogin.setOnClickListener {
             if (validateAdmin())

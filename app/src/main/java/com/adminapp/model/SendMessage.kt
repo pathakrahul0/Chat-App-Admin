@@ -27,7 +27,7 @@ data class SendMessage(
 
     @SerializedName("status")
     @Expose
-    var status: String?
+    var status: Boolean?
 ){
     constructor(): this(
         "",
@@ -35,6 +35,6 @@ data class SendMessage(
         "",
         "",
         0,
-        "",
+        false,
     )
 }

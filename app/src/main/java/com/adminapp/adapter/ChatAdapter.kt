@@ -49,6 +49,8 @@ class ChatAdapter(
             holder.rowBinding.llLeft.visibility = View.GONE
             holder.rowBinding.llRight.visibility = View.VISIBLE
             holder.rowBinding.tvTimeStampRight.text = Constants.getDateTime(message.timeStamp!!,"EEE, MMM d, ''yy, h:mm a")
+            holder.rowBinding.tvTimeStampRight.isChecked = message.status!!
+
 
         } else {
             if (message.contentType.equals("image")) {
@@ -64,8 +66,10 @@ class ChatAdapter(
             holder.rowBinding.llRight.visibility = View.GONE
             holder.rowBinding.llLeft.visibility = View.VISIBLE
             holder.rowBinding.tvTimeStampLeft.text = Constants.getDateTime(message.timeStamp!!,"EEE, MMM d, ''yy, h:mm a")
-
+            holder.rowBinding.tvTimeStampLeft.isChecked = message.status!!
         }
+
+
 
 
     }

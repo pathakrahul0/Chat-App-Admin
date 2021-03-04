@@ -32,5 +32,8 @@
     <string name="_12345678">12345678</string>
     <string name="create_group">Create Group</string>
     <string name="new_group">New Group</string>
+    <string name="no_data_found">No Data Found</string>
+    <string name="profile">Profile</string>
+    <string name="update">Update</string>
 
 </resources>

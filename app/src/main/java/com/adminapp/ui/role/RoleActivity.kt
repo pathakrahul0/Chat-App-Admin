@@ -3,6 +3,7 @@ package com.adminapp.ui.role
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.adminapp.databinding.ActivityRoleBinding
 import com.adminapp.ui.employee_login.EmployeeLoginActivity
@@ -18,6 +19,7 @@ class RoleActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(RoleViewModel::class.java)
         binding = ActivityRoleBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         initView()
 

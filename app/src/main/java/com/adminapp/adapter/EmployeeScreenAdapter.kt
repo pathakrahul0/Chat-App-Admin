@@ -10,6 +10,7 @@ import com.adminapp.databinding.AdapterEmployeeBinding
 import com.adminapp.interfaces.OnItemClicks
 import com.adminapp.model.Employee
 import com.adminapp.utils.Constants
+import com.bumptech.glide.Glide
 
 class EmployeeScreenAdapter(
     private val employeeList: ArrayList<Employee>,
@@ -33,7 +34,10 @@ class EmployeeScreenAdapter(
         val employee = employeeList[position]
         holder.rowBinding.tvEmployeeName.text = employee.name
         holder.rowBinding.tvPhone.text = employee.phone
-        holder.rowBinding.tvTime.text = Constants.getDateTime(employee.updatedAt,"dd/MM/yyyy")
+        Glide.with(activity).load(employee.profileImageUrl).thumbnail(0.1f)
+            .error(R.drawable.ic_user)
+            .into(holder.rowBinding.profileImage)
+        holder.rowBinding.tvTime.text = Constants.getDateTime(employee.timeStamp,"dd/MM/yyyy")
         holder.rowBinding.lEmployee.setOnClickListener {
             onItemClicks.onEmployeeClick(position)
         }

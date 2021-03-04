@@ -2,6 +2,7 @@ package com.adminapp.ui.group
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.adminapp.adapter.EmployeeGroupAdapter
 import com.adminapp.databinding.ActivityGroupBinding
@@ -28,6 +29,9 @@ class GroupActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(GroupViewModel::class.java)
         binding = ActivityGroupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+
         employeeIdList.add(preference.getUserId()!!)
 
         employeeAdapter = EmployeeGroupAdapter(employeeList, this, object : OnItemClicks {

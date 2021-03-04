@@ -28,12 +28,17 @@ class SearchViewModel
                 if (documents != null) {
                     for (document in documents) {
                         if (document.exists()) {
-                            if (!preference.getUserId().equals(document.get("id").toString())) {
+                            if (!preference.getUserId().equals(
+                                    document.get("id").toString()
+                                ) && !document.get("phone")?.equals("Group")!!
+                            ) {
                                 employeesLists.add(
                                     Employee(
                                         id = document.get("id").toString(),
                                         name = document.get("name").toString(),
                                         phone = document.get("phone").toString(),
+                                        profileImageUrl = document.get("profileImageUrl")
+                                            .toString(),
                                         timeStamp = document.getLong("timeStamp")!!,
                                         chatRoomReceiver = ArrayList(),
                                         createdAt = document.getLong("createdAt")!!,

@@ -22,6 +22,7 @@ class EmployeeDetailsFragment : Fragment() {
     var employeeName: String? = null
     var employeeId: String? = null
     var employeePhone: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

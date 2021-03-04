@@ -10,8 +10,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class EmployeeDetailsViewModel : ViewModel() {
     private val database = FirebaseFirestore.getInstance().collection("employees")
+
     private val isEmployeeExist = MediatorLiveData<Boolean>()
     val isEmployeeExists: LiveData<Boolean> = isEmployeeExist
+
     private val isLoad = MediatorLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = isLoad
 
@@ -35,6 +37,7 @@ class EmployeeDetailsViewModel : ViewModel() {
                         id = node.id,
                         name = name,
                         phone = phone,
+                        profileImageUrl = "",
                         chatRoomReceiver = ArrayList(),
                         createdAt = createdAt,
                         updatedAt = updatedAt,
@@ -44,15 +47,16 @@ class EmployeeDetailsViewModel : ViewModel() {
 
                     node.set(user)
                         .addOnSuccessListener {
-                            isLoad.value = false
+                            isEmployeeExist.value = true
                         }.addOnFailureListener {
-                            isLoad.value = false
                         }
                     Log.d("TAG", "username does not exists")
                 }
             } else {
                 Log.d("TAG", "Error getting documents: ", task.exception)
             }
+        }.addOnFailureListener{
+            isLoad.value = false
         }
 
 

@@ -15,6 +15,9 @@ data class Employee(
     @SerializedName("phone")
     @Expose
     val phone: String?,
+    @SerializedName("profileImageUrl")
+    @Expose
+    val profileImageUrl: String?,
     @SerializedName("chatRoomReceiver")
     @Expose
     var chatRoomReceiver: ArrayList<String>? = null,

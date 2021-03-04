@@ -49,9 +49,18 @@ class EmployeeListFragment : Fragment() {
         binding.rvEmployee.adapter = employeeAdapter
 
         viewModel.employeesData.observe({ lifecycle }) {
-            employeeList.clear()
-            employeeList.addAll(it)
-            employeeAdapter?.notifyDataSetChanged()
+            if (it.size > 0) {
+                employeeList.clear()
+                employeeList.addAll(it)
+                employeeAdapter?.notifyDataSetChanged()
+            } else {
+                binding.tvNoDataFound.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.isLoading.observe({ lifecycle }) {
+            if (it) binding.loader.visibility = View.VISIBLE
+            else binding.loader.visibility = View.GONE
         }
 
     }
