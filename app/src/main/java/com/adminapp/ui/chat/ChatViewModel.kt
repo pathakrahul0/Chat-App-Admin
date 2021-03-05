@@ -120,10 +120,13 @@ class ChatViewModel
     }
 
     private fun getChatRoomId() {
+
         if (chatRoomSenders?.size!! > 0) {
             for (chatSender in chatRoomSenders!!) {
                 if (chatRoomReceivers?.contains(chatSender)!!) {
-                    chatRoomId = chatSender
+                    if (chatSender.endsWith(receiverId!!))
+                        chatRoomId = chatSender
+                    else  chatRoomId = chatSender
                     checkMessageCollections()
                     break
                 }
@@ -156,6 +159,8 @@ class ChatViewModel
                 }
             }
     }
+
+
 
     fun uploadFirebase(uri: Uri, activity: ChatActivity) {
         val fileType = getFileExtension(uri, activity)
@@ -205,38 +210,40 @@ class ChatViewModel
         }
 
     }
+
     private fun updateReviverTime() {
-       FirebaseFirestore
+        FirebaseFirestore
             .getInstance().collection("employees")
             .document(receiverId!!).update(
-            mapOf(
-                "timeStamp" to Date().time,
-            )
-        ).addOnSuccessListener {
-               Log.d("Update ","Success")
+                mapOf(
+                    "timeStamp" to Date().time,
+                )
+            ).addOnSuccessListener {
+                Log.d("Update ", "Success")
 
-           }
-           .addOnFailureListener {
-               Log.d("Update ","Failure")
+            }
+            .addOnFailureListener {
+                Log.d("Update ", "Failure")
 
-        }
+            }
 
     }
+
     private fun updateSenderTime() {
-       FirebaseFirestore
+        FirebaseFirestore
             .getInstance().collection("employees")
             .document(senderId!!).update(
-            mapOf(
-                "timeStamp" to Date().time,
-            )
-        ).addOnSuccessListener {
-               Log.d("Update ","Success")
+                mapOf(
+                    "timeStamp" to Date().time,
+                )
+            ).addOnSuccessListener {
+                Log.d("Update ", "Success")
 
-           }
-           .addOnFailureListener {
-               Log.d("Update ","Failure")
+            }
+            .addOnFailureListener {
+                Log.d("Update ", "Failure")
 
-           }
+            }
 
     }
 

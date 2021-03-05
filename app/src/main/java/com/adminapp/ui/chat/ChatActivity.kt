@@ -56,7 +56,7 @@ class ChatActivity : AppCompatActivity() {
         binding.rvChat.smoothScrollToPosition(chatList.size)
 
 
-        viewModel.startChart(receiverId!!)
+        viewModel.startChart(receiverId!!,)
         viewModel.chatList.observe({ lifecycle }) {
             chatList.clear()
             chatList.addAll(it)

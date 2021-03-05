@@ -35,5 +35,7 @@
     <string name="no_data_found">No Data Found</string>
     <string name="profile">Profile</string>
     <string name="update">Update</string>
+    <string name="done">Done</string>
+    <string name="group_name">Group Name</string>
 
 </resources>

@@ -20,12 +20,15 @@ class EmployeeDetailsViewModel
     val preference: Preference
 ) : ViewModel() {
 
-    private val tag = "EmployeeDetailsViewModelActiity"
+    private val tag = "EmployeeDetailsViewModelActivity"
 
     private val isLoad = MediatorLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = isLoad
 
-    fun uploadFirebase(name: String, uri: Uri, activity: EmployeeDetailsActivity) {
+    private val isUpdate = MediatorLiveData<Boolean>()
+    val isUpdated: LiveData<Boolean> = isUpdate
+
+    fun uploadFirebase( uri: Uri, activity: EmployeeDetailsActivity) {
         val fileType = getFileExtension(uri, activity)
 
         val reference: StorageReference = FirebaseStorage.getInstance()
@@ -34,9 +37,8 @@ class EmployeeDetailsViewModel
             .addOnSuccessListener {
                 Log.d(tag, "Uploaded")
                 reference.downloadUrl.addOnSuccessListener { uri ->
-                    updateEmployee(uri.toString())
+                    updateEmployee(preference.getUserName()!!,uri.toString())
                     preference.setUserProfilePhoto(uri.toString())
-                    preference.setUserName(name)
                 }
             }
             .addOnFailureListener { e ->
@@ -49,7 +51,7 @@ class EmployeeDetailsViewModel
             .getExtensionFromMimeType(activity.contentResolver.getType(uri))
     }
 
-    private fun updateEmployee(profileImageUrl: String) {
+     fun updateEmployee(name: String,profileImageUrl: String) {
         isLoad.value = true
         FirebaseFirestore
             .getInstance()
@@ -57,11 +59,14 @@ class EmployeeDetailsViewModel
             .document(preference.getUserId()!!)
             .update(
                 mapOf(
+                    "name" to name,
                     "profileImageUrl" to profileImageUrl,
                     "updatedAt" to Date().time
                 )
             ).addOnSuccessListener {
                 isLoad.value = false
+                isUpdate.value = true
+
 
             }.addOnFailureListener {
                 isLoad.value = false

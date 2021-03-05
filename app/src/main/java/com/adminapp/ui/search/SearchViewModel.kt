@@ -40,6 +40,7 @@ class SearchViewModel
                                         profileImageUrl = document.get("profileImageUrl")
                                             .toString(),
                                         timeStamp = document.getLong("timeStamp")!!,
+                                        chatRoom = ArrayList(),
                                         chatRoomReceiver = ArrayList(),
                                         createdAt = document.getLong("createdAt")!!,
                                         updatedAt = document.getLong("updatedAt")!!,

@@ -1,7 +1,6 @@
 package com.adminapp.ui.employee_details
 
 import android.util.Log
-import android.widget.ProgressBar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +15,6 @@ class EmployeeDetailsViewModel : ViewModel() {
 
     private val isLoad = MediatorLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = isLoad
-
 
 
     fun addEmployee(name: String, phone: String, createdAt: Long, updatedAt: Long) {
@@ -38,11 +36,12 @@ class EmployeeDetailsViewModel : ViewModel() {
                         name = name,
                         phone = phone,
                         profileImageUrl = "",
+                        chatRoom = ArrayList(),
                         chatRoomReceiver = ArrayList(),
                         createdAt = createdAt,
                         updatedAt = updatedAt,
                         timeStamp = 0L,
-                        false
+                        isSelected = false
                     )
 
                     node.set(user)
@@ -55,7 +54,7 @@ class EmployeeDetailsViewModel : ViewModel() {
             } else {
                 Log.d("TAG", "Error getting documents: ", task.exception)
             }
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             isLoad.value = false
         }
 

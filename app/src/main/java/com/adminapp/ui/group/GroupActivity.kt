@@ -9,6 +9,7 @@ import com.adminapp.databinding.ActivityGroupBinding
 import com.adminapp.interfaces.OnItemClicks
 import com.adminapp.model.Employee
 import com.adminapp.prefrences.Preference
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -57,12 +58,24 @@ class GroupActivity : AppCompatActivity() {
         }
 
         binding.btnCreateGroup.setOnClickListener {
-            viewModel.createGroup(
-                name = "Sample Group",
-                employeeIdList
-            )
+            if (!binding.etFullName.text.toString().isEmpty())
+                viewModel.createGroup(
+                    name = binding.etFullName.text.toString(),
+                    employeeIdList
+                )
+            else Snackbar.make(binding.lGroup, "Please enter group name", Snackbar.LENGTH_LONG)
+                .show()
+
         }
 
+        viewModel.isUpdated.observe({ lifecycle }) {
+            if (it) {
+                onBackPressed()
+                Snackbar.make(binding.lGroup, "Group created", Snackbar.LENGTH_LONG)
+                    .show()
+            }
+        }
 
     }
+
 }

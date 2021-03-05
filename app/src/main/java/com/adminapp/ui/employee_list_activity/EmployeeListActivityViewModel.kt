@@ -40,12 +40,14 @@ class EmployeeListActivityViewModel
 
     fun getEmployees() {
         isLoad.value = true
+
         FirebaseFirestore
             .getInstance()
             .collection("employees")
             .document(preference.getUserId()!!)
             .get()
             .addOnSuccessListener {
+
                 if (it.data?.get("chatRoomReceiver") != null)
                     chatRoomSenders = it.data?.get("chatRoomReceiver") as ArrayList<String>
                 getEmployeesList()
@@ -65,6 +67,8 @@ class EmployeeListActivityViewModel
             .addOnCompleteListener { task ->
                 isLoad.value = false
                 if (task.isSuccessful) {
+                    employeesLists.clear()
+                    employeeList.value = employeesLists
                     if (task.result?.size()!! > 0) {
                         for (document in task.result!!) {
                             val receiverList = document.get("chatRoomReceiver") as ArrayList<String>
@@ -95,6 +99,7 @@ class EmployeeListActivityViewModel
                 phone = document.get("phone").toString(),
                 profileImageUrl = document.get("profileImageUrl").toString(),
                 timeStamp = document.getLong("timeStamp")!!,
+                chatRoom = ArrayList(),
                 chatRoomReceiver = ArrayList(),
                 createdAt = document.getLong("createdAt")!!,
                 updatedAt = document.getLong("updatedAt")!!,

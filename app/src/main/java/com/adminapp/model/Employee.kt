@@ -21,6 +21,9 @@ data class Employee(
     @SerializedName("chatRoomReceiver")
     @Expose
     var chatRoomReceiver: ArrayList<String>? = null,
+    @SerializedName("chatRoom")
+    @Expose
+    var chatRoom: ArrayList<String>? = null,
     @SerializedName("createdAt")
     @Expose
     val createdAt: Long,

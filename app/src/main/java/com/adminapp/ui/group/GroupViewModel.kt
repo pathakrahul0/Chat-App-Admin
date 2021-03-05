@@ -26,6 +26,10 @@ class GroupViewModel
     private var employeeIds: ArrayList<String>? = ArrayList()
     var chatRoomId: String? = null
 
+
+    private val isUpdate = MediatorLiveData<Boolean>()
+    val isUpdated: LiveData<Boolean> = isUpdate
+
     private val database = FirebaseFirestore.getInstance()
     private val isEmployeeExist = MediatorLiveData<Boolean>()
     private val isLoad = MediatorLiveData<Boolean>()
@@ -55,8 +59,10 @@ class GroupViewModel
                                     id = employee.document.get("id").toString(),
                                     name = employee.document.get("name").toString(),
                                     phone = employee.document.get("phone").toString(),
-                                    profileImageUrl = employee.document.get("profileImageUrl").toString(),
+                                    profileImageUrl = employee.document.get("profileImageUrl")
+                                        .toString(),
                                     timeStamp = employee.document.getLong("timeStamp")!!,
+                                    chatRoom = ArrayList(),
                                     chatRoomReceiver = ArrayList(),
                                     createdAt = employee.document.getLong("createdAt")!!,
                                     updatedAt = employee.document.getLong("updatedAt")!!,
@@ -84,6 +90,7 @@ class GroupViewModel
             name = name,
             phone = "Group",
             profileImageUrl = "",
+            chatRoom = ArrayList(),
             chatRoomReceiver = ArrayList(),
             createdAt = Date().time,
             updatedAt = Date().time,
@@ -96,6 +103,8 @@ class GroupViewModel
                 isLoad.value = false
                 for (employeeId in this.employeeIds!!) {
                     getReceivers(employeeId)
+                    isUpdate.value = true
+
                 }
 
             }.addOnFailureListener {

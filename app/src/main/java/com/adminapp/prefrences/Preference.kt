@@ -17,6 +17,13 @@ class Preference(var context: Context) {
     fun isAdmin(): Boolean {
         return getBoolean("isAdmin")
     }
+    fun setIsUserLogin(isUserLogin: Boolean?) {
+        setBoolean("isUserLogin", isUserLogin!!)
+    }
+
+    fun isUserLogin(): Boolean {
+        return getBoolean("isUserLogin")
+    }
 
     fun setUserId(UserId: String?) {
         setString("Id", UserId!!)

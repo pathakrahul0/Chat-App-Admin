@@ -10,9 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import com.adminapp.R
 import com.adminapp.databinding.ActivityEmployeeDetailsBinding
 import com.adminapp.prefrences.Preference
+import com.adminapp.ui.employee_list_activity.EmployeeListActivity
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -53,13 +56,14 @@ class EmployeeDetailsActivity : AppCompatActivity() {
         Glide.with(this)
             .load(preference.getUserProfilePhoto())
             .thumbnail(0.1f)
+            .error(R.drawable.ic_user)
             .into(binding.imageView)
 
         binding.btnAddEmployee.setOnClickListener {
-            viewModel.uploadFirebase(
+            preference.setUserName(binding.etFullName.text.toString())
+            viewModel.updateEmployee(
                 binding.etFullName.text.toString(),
-                Uri.parse(preference.getUserProfilePhoto()),
-                this
+                preference.getUserProfilePhoto()!!
             )
         }
 
@@ -75,6 +79,14 @@ class EmployeeDetailsActivity : AppCompatActivity() {
 
         }
 
+        viewModel.isUpdated.observe({lifecycle}){
+            if (it) {
+                Snackbar.make(binding.lEmployeeDetails, "User Updated", Snackbar.LENGTH_LONG).show()
+            } else
+                Snackbar.make(binding.lEmployeeDetails, "Some thing went wrong", Snackbar.LENGTH_LONG)
+                    .show()
+        }
+
     }
 
 
@@ -88,7 +100,7 @@ class EmployeeDetailsActivity : AppCompatActivity() {
                     .load(uri.toString())
                     .thumbnail(0.1f)
                     .into(binding.imageView)
-                uri?.let { viewModel.uploadFirebase(binding.etFullName.text.toString(), it, this) }
+                uri?.let { viewModel.uploadFirebase( it, this) }
             }
         }
     }

@@ -56,7 +56,7 @@ class SplashActivity : AppCompatActivity() {
         })
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if (!preference.getUserId().isNullOrEmpty()) {
+            if (preference.isUserLogin()) {
                 startActivity(Intent(this@SplashActivity, EmployeeListActivity::class.java))
             } else if (preference.isAdmin())
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))

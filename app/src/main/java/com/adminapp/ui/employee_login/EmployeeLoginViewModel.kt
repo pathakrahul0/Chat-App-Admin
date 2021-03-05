@@ -1,6 +1,7 @@
 package com.adminapp.ui.employee_login
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
@@ -34,7 +35,7 @@ class EmployeeLoginViewModel
     private val isLoad = MediatorLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = isLoad
 
-     val isHideSendOtpBtns = MediatorLiveData<Boolean>()
+    val isHideSendOtpBtns = MediatorLiveData<Boolean>()
     val isHideSendOtpBtn: LiveData<Boolean> = isHideSendOtpBtns
 
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
@@ -42,7 +43,7 @@ class EmployeeLoginViewModel
     private var storedVerificationId: String? = null
 
     private val database = FirebaseFirestore.getInstance().collection("employees")
-
+    private var activity: EmployeeLoginActivity? = null
 
     fun validatePhone(phone: String): Boolean {
         if (phone.isEmpty())
@@ -63,7 +64,7 @@ class EmployeeLoginViewModel
 
     fun getUserRef(phone: String?, activity: EmployeeLoginActivity) {
         isLoad.value = true
-
+        this.activity = activity
         auth.setLanguageCode(Locale.getDefault().language)
 
         val userNameQuery: Query = FirebaseFirestore
@@ -82,7 +83,6 @@ class EmployeeLoginViewModel
         userNameQuery
             .get()
             .addOnCompleteListener { task ->
-                isLoad.value = false
                 if (task.isSuccessful) {
                     if (task.result?.size()!! > 0) {
                         for (document in task.result!!) {
@@ -148,6 +148,12 @@ class EmployeeLoginViewModel
             isHideSendOtpBtns.value = !(verificationId.isEmpty() && token.toString().isEmpty())
             storedVerificationId = verificationId
             resendToken = token
+            if (storedVerificationId.isNullOrEmpty())
+                Toast.makeText(
+                    activity,
+                    "Unable to send OTP please try after some time",
+                    Toast.LENGTH_LONG
+                ).show()
         }
     }
 
@@ -163,7 +169,7 @@ class EmployeeLoginViewModel
             .addOnCompleteListener { task ->
                 isLoad.value = false
                 if (task.isSuccessful) {
-
+                    preference.setIsUserLogin(true)
                     isVerified.value = true
                     Log.d("TAG", "Login Complete")
                 } else {
@@ -191,6 +197,7 @@ class EmployeeLoginViewModel
             phone = phone,
             profileImageUrl = "",
             chatRoomReceiver = ArrayList(),
+            chatRoom = ArrayList(),
             createdAt = Date().time,
             updatedAt = Date().time,
             timeStamp = Date().time,

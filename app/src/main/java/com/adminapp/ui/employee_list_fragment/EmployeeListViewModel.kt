@@ -51,6 +51,7 @@ class EmployeeListViewModel : ViewModel() {
                                     profileImageUrl = employee.document.get("profileImageUrl")
                                         .toString(),
                                     timeStamp = employee.document.getLong("timeStamp")!!,
+                                    chatRoom = ArrayList(),
                                     chatRoomReceiver = ArrayList(),
                                     createdAt = employee.document.getLong("createdAt")!!,
                                     updatedAt = employee.document.getLong("updatedAt")!!,

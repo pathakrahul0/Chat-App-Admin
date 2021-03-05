@@ -43,6 +43,11 @@ class EmployeeListActivity : AppCompatActivity() {
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.getEmployees()
 
         employeeAdapter = EmployeeScreenAdapter(employeeList, this, object : OnItemClicks {
@@ -60,6 +65,7 @@ class EmployeeListActivity : AppCompatActivity() {
 
         viewModel.employeesData.observe({ lifecycle }) {
             if (it.size > 0) {
+                binding.tvNoDataFound.visibility = View.GONE
                 employeeList.clear()
                 employeeList.addAll(it)
                 employeeAdapter?.notifyDataSetChanged()

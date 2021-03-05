@@ -18,8 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AdminApp"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.employee_details_activity.EmployeeDetailsActivity"
-            />
+        <activity android:name=".ui.group_details.GroupDetailsActivity"></activity>
+        <activity android:name=".ui.employee_details_activity.EmployeeDetailsActivity" />
         <activity
             android:name=".ui.group.GroupActivity"
             android:screenOrientation="portrait"
