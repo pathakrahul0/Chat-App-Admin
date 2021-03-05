@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.adminapp.model.Employee
 import com.adminapp.prefrences.Preference
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -36,8 +37,6 @@ class EmployeeListActivityViewModel
     val isLoading: LiveData<Boolean> = isLoad
 
 
-
-
     fun getEmployees() {
         isLoad.value = true
 
@@ -63,31 +62,75 @@ class EmployeeListActivityViewModel
             .getInstance()
             .collection("employees")
             .orderBy("timeStamp", Query.Direction.DESCENDING)
-            .get()
-            .addOnCompleteListener { task ->
+            .addSnapshotListener { snapshot, e ->
                 isLoad.value = false
-                if (task.isSuccessful) {
-                    employeesLists.clear()
-                    employeeList.value = employeesLists
-                    if (task.result?.size()!! > 0) {
-                        for (document in task.result!!) {
-                            val receiverList = document.get("chatRoomReceiver") as ArrayList<String>
-                            if (!preference.getUserId().equals(document.get("id").toString())) {
-                                if (document.get("phone")!! == "Group") {
-                                    for (receiver in receiverList) {
-                                        if (chatRoomSenders?.contains(receiver)!!)
-                                            addEmployee(document)
+                if (e != null) {
+                    Log.w(tag, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+                if (snapshot != null && !snapshot.isEmpty) {
+                    if (snapshot.documentChanges.size > 0) {
+                        for (employee in snapshot.documentChanges) {
+                            val receiverList =
+                                employee.document.get("chatRoomReceiver") as ArrayList<String>
+                            when (employee.type) {
+                                DocumentChange.Type.ADDED -> {
+                                    if (!preference.getUserId()
+                                            .equals(employee.document.get("id").toString())
+                                    ) {
+                                        if (employee.document.get("phone")!! == "Group") {
+                                            for (receiver in receiverList) {
+                                                if (chatRoomSenders?.contains(receiver)!!)
+                                                    addEmployee(employee.document)
+                                            }
+                                        } else addEmployee(employee.document)
                                     }
-                                } else addEmployee(document)
+                                }
+                                DocumentChange.Type.REMOVED -> {
+                                    val ids = employee.document.get("id").toString()
+                                    for (id in 0 until employeesLists.size) {
+                                        if (employeesLists.get(id).id == ids) {
+                                            employeesLists.removeAt(id)
+                                            break
+                                        }
+                                    }
+                                }
+                                DocumentChange.Type.MODIFIED -> {
+                                    val ids = employee.document.get("id").toString()
+                                    for (id in 0 until employeesLists.size) {
+                                        if (employeesLists.get(id).id == ids) {
+                                            employeesLists.removeAt(id)
+                                            break
+                                        }
+                                    }
+                                    if (!preference.getUserId()
+                                            .equals(employee.document.get("id").toString())
+                                    ) {
+                                        if (employee.document.get("phone")!! == "Group") {
+                                            for (receiver in receiverList) {
+                                                if (chatRoomSenders?.contains(receiver)!!)
+                                                    addEmployee(employee.document)
+                                            }
+                                        } else addEmployee(employee.document)
+                                    }
+                                }
+                                else -> {
+                                    if (!preference.getUserId()
+                                            .equals(employee.document.get("id").toString())
+                                    ) {
+                                        if (employee.document.get("phone")!! == "Group") {
+                                            for (receiver in receiverList) {
+                                                if (chatRoomSenders?.contains(receiver)!!)
+                                                    addEmployee(employee.document)
+                                            }
+                                        } else addEmployee(employee.document)
+                                    }
+                                }
                             }
                         }
                     }
                     employeeList.value = employeesLists
                 }
-
-            }
-            .addOnFailureListener {
-                isLoad.value = false
             }
     }
 

@@ -72,8 +72,9 @@
                     android:background="@android:color/white"
                     android:fontFamily="sans-serif-medium"
                     android:hint="@string/enter_otp"
-                    android:inputType="textCapWords"
+                    android:inputType="numberSigned"
                     android:maxLines="1"
+                    android:maxLength="6"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 

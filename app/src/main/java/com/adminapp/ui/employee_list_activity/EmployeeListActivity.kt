@@ -43,11 +43,6 @@ class EmployeeListActivity : AppCompatActivity() {
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-
-    }
-
-    override fun onResume() {
-        super.onResume()
         viewModel.getEmployees()
 
         employeeAdapter = EmployeeScreenAdapter(employeeList, this, object : OnItemClicks {
@@ -79,6 +74,8 @@ class EmployeeListActivity : AppCompatActivity() {
             else binding.loader.visibility = View.GONE
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater

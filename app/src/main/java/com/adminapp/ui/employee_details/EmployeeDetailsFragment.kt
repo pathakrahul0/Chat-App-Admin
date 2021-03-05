@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.adminapp.databinding.EmployeeDetailsFragmentBinding
 import com.adminapp.model.Employee
 import com.adminapp.utils.Constants
@@ -67,6 +68,7 @@ class EmployeeDetailsFragment : Fragment() {
 
         detailsViewModel.isEmployeeExists.observe({ lifecycle }) {
             if (it) {
+//                findNavController().popBackStack()
                 requireActivity().onBackPressed()
             } else {
                 Snackbar.make(binding.lEmployeeDetails, "Employee already exists", Snackbar.LENGTH_LONG).show()

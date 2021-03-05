@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.adminapp.model.ChatRoom
 import com.adminapp.model.Employee
 import com.adminapp.prefrences.Preference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,7 +22,7 @@ class GroupViewModel
     val preference: Preference
 ) : ViewModel() {
 
-    private var chatRoomSenders: ArrayList<String>? = ArrayList()
+    private var chatRooms: ArrayList<ChatRoom>? = ArrayList()
     private var chatRoomReceivers: ArrayList<String>? = ArrayList()
     private var employeeIds: ArrayList<String>? = ArrayList()
     var chatRoomId: String? = null
@@ -102,9 +103,38 @@ class GroupViewModel
             .addOnSuccessListener {
                 isLoad.value = false
                 for (employeeId in this.employeeIds!!) {
-                    getReceivers(employeeId)
+                    FirebaseFirestore.getInstance()
+                        .collection("employees")
+                        .document(employeeId)
+                        .get()
+                        .addOnSuccessListener {
+                            chatRooms?.clear()
+                            chatRoomReceivers?.clear()
+                            if (it.data?.get("chatRoomReceiver") != null)
+                                chatRoomReceivers?.addAll(it.data?.get("chatRoomReceiver") as ArrayList<String>)
+                            if (it.data?.get("chatRoom") != null)
+                                chatRooms?.addAll(it.data?.get("chatRoom") as ArrayList<ChatRoom>)
+                            chatRoomReceivers?.add(chatRoomId!!)
+                            val chatRoom = ChatRoom()
+                            chatRoom.id = chatRoomId
+                            chatRoom.chatId = chatRoomId
+                            chatRooms?.add(chatRoom)
+                            FirebaseFirestore
+                                .getInstance()
+                                .collection("employees")
+                                .document(employeeId)
+                                .update(
+                                    mapOf(
+                                        "chatRoom" to chatRooms,
+                                        "chatRoomReceiver" to chatRoomReceivers
+                                    )
+                                )
+                                .addOnSuccessListener {
+                                    chatRooms?.clear()
+                                    chatRoomReceivers?.clear()
+                                }
+                        }
                     isUpdate.value = true
-
                 }
 
             }.addOnFailureListener {
@@ -114,31 +144,6 @@ class GroupViewModel
     }
 
 
-    private fun getReceivers(receiverId: String) {
-        chatRoomReceivers?.clear()
-        FirebaseFirestore.getInstance()
-            .collection("employees")
-            .document(receiverId)
-            .get()
-            .addOnSuccessListener {
-                if (it.data?.get("chatRoomReceiver") != null)
-                    chatRoomReceivers = it.data?.get("chatRoomReceiver") as ArrayList<String>
-                receiverReceiverId(receiverId)
-            }
-    }
-
-    private fun receiverReceiverId(receiverId: String) {
-        chatRoomReceivers?.add(chatRoomId!!)
-        FirebaseFirestore.getInstance()
-            .collection("employees")
-            .document(receiverId)
-            .update("chatRoomReceiver", chatRoomReceivers)
-            .addOnSuccessListener {
-                chatRoomReceivers?.clear()
-            }.addOnFailureListener {
-                chatRoomReceivers?.clear()
-            }
-    }
 
 
 }

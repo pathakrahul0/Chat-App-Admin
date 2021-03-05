@@ -23,7 +23,7 @@ data class Employee(
     var chatRoomReceiver: ArrayList<String>? = null,
     @SerializedName("chatRoom")
     @Expose
-    var chatRoom: ArrayList<String>? = null,
+    var chatRoom: ArrayList<ChatRoom>? = null,
     @SerializedName("createdAt")
     @Expose
     val createdAt: Long,
@@ -36,7 +36,20 @@ data class Employee(
     @SerializedName("isSelected")
     @Expose
     var isSelected: Boolean,
-)
-
+) {
+    constructor(
+    ) : this(
+        "",
+        "",
+        "",
+        "",
+        ArrayList(),
+        ArrayList(),
+        0,
+        0,
+        0,
+        false
+    )
+}
 
 

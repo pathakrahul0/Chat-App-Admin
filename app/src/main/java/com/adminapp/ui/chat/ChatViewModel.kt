@@ -4,6 +4,8 @@ import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.*
+import com.adminapp.model.ChatRoom
+import com.adminapp.model.Employee
 import com.adminapp.model.SendMessage
 import com.adminapp.prefrences.Preference
 import com.google.firebase.firestore.*
@@ -20,6 +22,7 @@ class ChatViewModel
     preference: Preference
 ) : ViewModel() {
 
+    private var chatRooms: ArrayList<ChatRoom>? = ArrayList()
     private var chatRoomSenders: ArrayList<String>? = ArrayList()
     private var chatRoomReceivers: ArrayList<String>? = ArrayList()
     private var fireBaseFireStore = FirebaseFirestore.getInstance()
@@ -32,6 +35,65 @@ class ChatViewModel
     var textChatValueChange: LiveData<String> = textChatValue
     var chatRoomId: String? = null
     var receiverId: String? = null
+
+
+    private fun receiverChatRoom() {
+        fireBaseFireStore.collection("employees").document(receiverId!!).get()
+            .addOnSuccessListener {
+                chatRooms?.clear()
+                val chatRoom = ChatRoom()
+                chatRoom.id = senderId
+                chatRoom.chatId = senderId + receiverId
+                chatRooms?.add(chatRoom)
+                if (it.get("chatRoom") != null) chatRooms?.addAll(it.get("chatRoom") as Collection<ChatRoom>)
+                fireBaseFireStore.collection("employees").document(receiverId!!)
+                    .update("chatRoom", chatRooms)
+                    .addOnSuccessListener {
+                        Log.d(" ", " ")
+                        checkMessageCollections()
+                    }.addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+            }
+    }
+
+    private fun receiverReceiverId() {
+        fireBaseFireStore.collection("employees").document(receiverId!!).get()
+            .addOnSuccessListener { it ->
+                chatRoomReceivers?.clear()
+                if (it.get("chatRoomReceiver") != null) chatRoomReceivers?.addAll(it.get("chatRoomReceiver") as ArrayList<String>)
+                chatRoomReceivers?.add(senderId!!)
+                fireBaseFireStore.collection("employees").document(receiverId!!)
+                    .update("chatRoomReceiver", chatRoomReceivers)
+                    .addOnSuccessListener {
+                        receiverChatRoom()
+                    }
+            }
+    }
+
+    private fun senderChatRoom(it: DocumentSnapshot) {
+        chatRooms?.clear()
+        val chatRoom = ChatRoom()
+        chatRoom.id = receiverId
+        chatRoom.chatId = senderId + receiverId
+        chatRoomId = senderId + receiverId
+        chatRooms?.add(chatRoom)
+        if (it.get("chatRoom") != null) chatRooms?.addAll(it.get("chatRoom") as Collection<ChatRoom>)
+        fireBaseFireStore.collection("employees").document(senderId!!).update("chatRoom", chatRooms)
+            .addOnSuccessListener {
+                receiverReceiverId()
+            }.addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+    }
+
+    private fun senderReceiverId(it: DocumentSnapshot) {
+        chatRoomReceivers?.clear()
+        if (it.get("chatRoomReceiver") != null) chatRoomReceivers?.addAll(it.get("chatRoomReceiver") as ArrayList<String>)
+        chatRoomReceivers?.add(receiverId!!)
+        fireBaseFireStore.collection("employees").document(senderId!!)
+            .update("chatRoomReceiver", chatRoomReceivers)
+            .addOnSuccessListener { documentReference ->
+                senderChatRoom(it)
+            }.addOnFailureListener { e -> Log.w(TAG, "Error adding document", e) }
+    }
+
 
 
     fun sendMsg(textMsg: String, contentType: String) {
@@ -58,89 +120,35 @@ class ChatViewModel
     }
 
 
-    private fun receiverReceiverId() {
-        chatRoomReceivers?.add(chatRoomId!!)
-        fireBaseFireStore
-            .collection("employees")
-            .document(receiverId!!)
-            .update(
-                mapOf(
-                    "chatRoomReceiver" to chatRoomSenders
-                )
-            )
-            .addOnSuccessListener {
-            }.addOnFailureListener {
-
-            }
-    }
-
-    private fun senderReceiverId() {
-        chatRoomId = senderId + receiverId
-        chatRoomSenders?.add(chatRoomId!!)
-        fireBaseFireStore
-            .collection("employees")
-            .document(senderId!!)
-            .update(
-                mapOf(
-                    "chatRoomReceiver" to chatRoomSenders
-                )
-            )
-            .addOnSuccessListener { _ ->
-                receiverReceiverId()
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-            }
-    }
-
-    private fun getReceivers() {
-        chatRoomReceivers?.clear()
-        fireBaseFireStore
-            .collection("employees")
-            .document(receiverId!!)
-            .get()
-            .addOnSuccessListener {
-                if (it.data?.get("chatRoomReceiver") != null)
-                    chatRoomReceivers = it.data?.get("chatRoomReceiver") as ArrayList<String>
-                getSenders()
-            }
-    }
-
-    private fun getSenders() {
-        chatRoomSenders?.clear()
-        fireBaseFireStore
-            .collection("employees")
-            .document(senderId!!)
-            .get()
-            .addOnSuccessListener {
-                if (it.data?.get("chatRoomReceiver") != null)
-                    chatRoomSenders = it.data?.get("chatRoomReceiver") as ArrayList<String>
-                getChatRoomId()
-            }
-    }
-
-    private fun getChatRoomId() {
-
-        if (chatRoomSenders?.size!! > 0) {
-            for (chatSender in chatRoomSenders!!) {
-                if (chatRoomReceivers?.contains(chatSender)!!) {
-                    if (chatSender.endsWith(receiverId!!))
-                        chatRoomId = chatSender
-                    else  chatRoomId = chatSender
-                    checkMessageCollections()
-                    break
-                }
-            }
-            if (chatRoomId.isNullOrEmpty())
-                senderReceiverId()
-        } else
-            senderReceiverId()
-    }
-
     fun startChart(receiverId: String) {
         this.receiverId = receiverId
-        getReceivers()
+        chatRoomReceivers?.clear()
+        chatRooms?.clear()
+        fireBaseFireStore.collection("employees").document(senderId!!).get().addOnSuccessListener {
+            val userData = it.toObject(Employee::class.java)
+            if (userData?.chatRoomReceiver != null) {
+                chatRoomReceivers?.addAll(userData.chatRoomReceiver!!)
+                if (chatRoomReceivers?.size!! > 0 && chatRoomReceivers?.contains(receiverId)!!) {
+                    if (userData.chatRoom != null) chatRooms?.addAll(userData.chatRoom!!)
+                    if (chatRooms != null && chatRooms?.size!! > 0) {
+                        for (chatPosition in 0 until chatRooms?.size!!) {
+                            if (chatRooms?.get(chatPosition)?.id == receiverId) {
+                                chatRoomId = chatRooms?.get(chatPosition)?.chatId!!
+                                checkMessageCollections()
+                            }
+                        }
+                    }
+                } else {
+                    chatRooms?.clear()
+                    senderReceiverId(it)
+                }
+            } else {
+                chatRooms?.clear()
+                senderReceiverId(it)
+            }
+        }
     }
+
 
     private fun checkMessageCollections() {
         fireBaseFireStore
@@ -159,7 +167,6 @@ class ChatViewModel
                 }
             }
     }
-
 
 
     fun uploadFirebase(uri: Uri, activity: ChatActivity) {
